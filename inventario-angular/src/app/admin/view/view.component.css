@@ -1,0 +1,22 @@
+.ingresar{
+    background-color:rgb(3, 107, 25) ;
+    color: rgb(255, 255, 255); 
+    
+ }
+ h1{
+    color:rgb(3, 107, 25);
+    font-family: Oxygen;
+    
+}
+.formulario{
+    background:rgb(218, 255, 169);
+    padding: 100px;
+    border-radius: 10px;
+    box-shadow:0 0 30 px rgb(0,0,0,alpha);
+    color: black;
+}
+
+.resgistrar{
+    color :rgb(3, 107, 25); 
+   
+}
