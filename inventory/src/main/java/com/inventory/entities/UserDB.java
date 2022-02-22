@@ -1,94 +1,61 @@
 package com.inventory.entities;
 
-import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
 public class UserDB {
 
-    @Id
-    @GeneratedValue
-    private long id;
-    @Column(unique = true, name = "usua")
-    private String user;
-    private String password;
-    private String name;
-    private int age;
-    private Role role;
-    private Date admissionDate;
+	@Id
+	@GeneratedValue
+	private long id;
+	@Column(unique = true)
+	private String name;
+	private Role role;
+	private Boolean active;
 
-    public UserDB() {
-  
-    }
+	public UserDB() {
 
-    public UserDB(long id, String user, String password, String name, int age, Role role, Date admissionDate) {
-        this.id = id;
-        this.user = user;
-        this.password = password;
-        this.name = name;
-        this.age = age;
-        this.role = role;
-        this.admissionDate = admissionDate;
-    }
+	}
 
-    public long getId() {
-        return id;
-    }
-    
-    public void setId(long id) {
-        this.id = id;
-    }
+	public UserDB(long id, String name, Role role, Boolean active) {
+		this.id = id;
+		this.name = name;
+		this.role = role;
+		this.active = active;
+	}
 
-    public String getUser() {
-        return user;
-    }
+	public long getId() {
+		return id;
+	}
 
-    public void setUser(String user) {
-        this.user = user;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Role getRole() {
+		return role;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setRole(Role role) {
+		this.role = role;
+	}
 
-    public int getAge() {
-        return age;
-    }
+	public Boolean getActive() {
+		return active;
+	}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Date getAdmissionDate() {
-        return admissionDate;
-    }
-
-    public void setAdmissionDate(Date admissionDate) {
-        this.admissionDate = admissionDate;
-    }
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
 }

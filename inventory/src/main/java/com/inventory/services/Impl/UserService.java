@@ -1,5 +1,8 @@
 package com.inventory.services.Impl;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.inventory.entities.UserDB;
 import com.inventory.exceptions.UserException;
 import com.inventory.repositories.UserRepository;
@@ -13,35 +16,62 @@ public class UserService implements UserServiceInterface {
   @Autowired
   private UserRepository userRepository;
 
-  public UserDB login(UserDB user) {
-    UserDB userFind = userRepository.findByUser(user.getUser());
-    if (user.getPassword().equals(userFind.getPassword())) {
-      return userFind;
+  public List<UserDB> getListUser() {
+    List<UserDB> findAll = userRepository.findAll();
+    if (findAll.size() == 0 || findAll == null) {
+      throw new UserException("Empty list user");
     } else {
-      throw new UserException("Login failed");
+      return findAll;
     }
   }
 
-  public UserDB signUp(UserDB user) {
-    UserDB findByUserDB = userRepository.findByUser(user.getUser());
-    if (findByUserDB == null) {
-      return userRepository.save(user);
-    } else {
-      throw new UserException("Repeated user");
-    }
-  }
-
-  public UserDB getUserByUser(String user) {
-    UserDB findByUserDB = userRepository.findByUser(user);
-    if (findByUserDB != null) {
-      return findByUserDB;
+  public UserDB getUserById(Long id) {
+    Optional<UserDB> userOpt = userRepository.findById(id);
+    if (userOpt.isPresent()) {
+      return userOpt.get();
     } else {
       throw new UserException("User not found");
     }
   }
 
-  public UserDB getUserByUserWithouthException(String user) {
-    UserDB findByUserDB = userRepository.findByUser(user);
-    return findByUserDB;
+  public UserDB editUser(UserDB user) {
+    Optional<UserDB> userOpt = userRepository.findById(user.getId());
+    if (userOpt.isPresent()) {
+      try {
+        return userRepository.save(user);
+      } catch (Exception e) {
+        throw new UserException("User repeated name");
+      }
+    } else {
+      throw new UserException("User not found");
+    }
+  }
+
+  public UserDB addUser(UserDB user) {
+    UserDB userFind = userRepository.findByName(user.getName());
+    if (userFind != null) {
+      throw new UserException("User repeated name");
+    } else {
+      return userRepository.save(user);
+    }
+  }
+
+  public Long deleteUser(Long id) {
+    Optional<UserDB> userFind = userRepository.findById(id);
+    if (userFind.isPresent()) {
+      userRepository.deleteById(id);
+      return id;
+    } else {
+      throw new UserException("User not found");
+    }
+  }
+
+  public List<UserDB> findByName(String name) {
+    List<UserDB> findByName = userRepository.findAllByName(name);
+    if (findByName.size() == 0 || findByName == null) {
+      throw new UserException("Empty list user");
+    } else {
+      return findByName;
+    }
   }
 }

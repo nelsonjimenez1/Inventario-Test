@@ -17,41 +17,41 @@ import org.springframework.web.filter.CorsFilter;
 @SpringBootApplication
 public class InventoryApplication extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
-        SpringApplication.run(InventoryApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(InventoryApplication.class, args);
+	}
 
-    @Autowired
-    Environment env;
+	@Autowired
+	Environment env;
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(getListProperty("cors.allowed.origins"));
-        config.setAllowedMethods(getListProperty("cors.allowed.methods"));
-        config.setAllowedHeaders(getListProperty("cors.allowed.headers"));
-        config.setExposedHeaders(getListProperty("cors.exposed.headers"));
-        config.setAllowCredentials(getBooleanProperty("cors.allow.credentials"));
-        config.setMaxAge(getLongProperty("cors.maxage"));
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
+	@Bean
+	public CorsFilter corsFilter() {
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowedOrigins(getListProperty("cors.allowed.origins"));
+		config.setAllowedMethods(getListProperty("cors.allowed.methods"));
+		config.setAllowedHeaders(getListProperty("cors.allowed.headers"));
+		config.setExposedHeaders(getListProperty("cors.exposed.headers"));
+		config.setAllowCredentials(getBooleanProperty("cors.allow.credentials"));
+		config.setMaxAge(getLongProperty("cors.maxage"));
+		source.registerCorsConfiguration("/**", config);
+		return new CorsFilter(source);
+	}
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(InventoryApplication.class);
-    }
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(InventoryApplication.class);
+	}
 
-    private List<String> getListProperty(String key) {
-        return Arrays.asList(env.getProperty(key).split(","));
-    }
+	private List<String> getListProperty(String key) {
+		return Arrays.asList(env.getProperty(key).split(","));
+	}
 
-    private Boolean getBooleanProperty(String key) {
-        return Boolean.valueOf(env.getProperty(key));
-    }
+	private Boolean getBooleanProperty(String key) {
+		return Boolean.valueOf(env.getProperty(key));
+	}
 
-    private Long getLongProperty(String key) {
-        return Long.valueOf(env.getProperty(key));
-    }
+	private Long getLongProperty(String key) {
+		return Long.valueOf(env.getProperty(key));
+	}
 }

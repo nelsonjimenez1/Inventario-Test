@@ -1,4 +1,5 @@
 export enum Role {
-  SalesConsultant = 'ASESOR_ VENTAS',
-  AdministratorSupport = 'ADMINISTRADOR_SOPORTE',
+  administrator = 'ADMINISTRADOR',
+  auditor = 'AUDITOR',
+  assistant = 'AUXILIAR'
 }
