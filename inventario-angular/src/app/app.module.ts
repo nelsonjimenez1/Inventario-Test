@@ -1,20 +1,18 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FooterComponent } from './common/footer/footer.component';
-import { LoginComponent } from './auth/login/login.component';
-import { SignupComponent } from './auth/signup/signup.component';
-import { AuthService } from './services/auth.service';
-import { ProductService } from './services/product.service';
+import { UserService } from './services/user.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SearchComponent } from './user/search/search.component';
+import { ListComponent } from './user/list/list.component';
+import { ViewComponent } from './user/view/view.component';
 
 @NgModule({
   declarations: [
-    AppComponent, FooterComponent, LoginComponent, SignupComponent, 
+    SearchComponent, ListComponent, ViewComponent, AppComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +22,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HttpClientModule,
     BrowserAnimationsModule
   ],
-  providers: [AuthService, ProductService],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

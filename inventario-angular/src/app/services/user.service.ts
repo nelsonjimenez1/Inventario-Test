@@ -3,7 +3,6 @@ import { UserDB } from '../models/userdb';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpHeaders
 } from "@angular/common/http";
 
 import { Observable, throwError } from "rxjs";
@@ -13,8 +12,9 @@ import { environment } from "src/environments/environment";
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
-  public auth:string = '';
+
+export class UserService {
+  
   constructor(private http: HttpClient) {
   }
 
@@ -24,14 +24,7 @@ export class AuthService {
   }
 
   private get<T>(url:any): Observable<T> {
-    console.log("get:", url, this.auth);
-    var auth = localStorage.getItem('authorization');
-    var header;
-    if (auth != null) {
-      header = {
-        headers: new HttpHeaders().set('Authorization',  auth)
-      }
-    }
+    console.log("get:", url);
     return this.http.get<T>(url)
       .pipe(
         // retry(5),
@@ -41,7 +34,7 @@ export class AuthService {
 
   private post<T>(url:any, data: T): Observable<T> {
     console.log("post:", url);
-    return this.http.post<T>(url, data, {withCredentials: false})
+    return this.http.post<T>(url, data)
       .pipe(
         // retry(5),
         catchError(this.handleError)
@@ -50,7 +43,7 @@ export class AuthService {
 
   private put<T>(url:any, data: T): Observable<T> {
     console.log("put:", url);
-    return this.http.put<T>(url, data, {withCredentials: false})
+    return this.http.put<T>(url, data)
       .pipe(
         // retry(5),
         catchError(this.handleError)
@@ -59,25 +52,40 @@ export class AuthService {
 
   private delete<T>(url:any): Observable<T> {
     console.log("delete:", url);
-    return this.http.delete<T>(url, {withCredentials: false})
+    return this.http.delete<T>(url)
       .pipe(
         // retry(5),
         catchError(this.handleError)
       );
   }
 
-  login(user:UserDB) {
-    const url = environment.inventoryService + "user/login";
-    return this.post<UserDB>(url, user);
+  getListUser() {
+    const url = environment.inventoryService + "user";
+    return this.get<UserDB[]>(url);
   }
 
-  signUp(user:UserDB) {
+  getUserById(id:number) {
+    const url = environment.inventoryService + "user/" + id;
+    return this.get<UserDB>(url);
+  }
+
+  editUser(user:UserDB) {
+    const url = environment.inventoryService + "user";
+    return this.put<UserDB>(url, user);
+  }
+
+  addUser(user:UserDB) {
     const url = environment.inventoryService + "user";
     return this.post<UserDB>(url, user);
   }
 
-  getUserByUser(user:string) {
-    const url = environment.inventoryService + "user/" + user;
-    return this.get<UserDB>(url);
+  deleteUser(id:number) {
+    const url = environment.inventoryService + "user/" + id;
+    return this.delete<UserDB>(url);
+  }
+
+  findByName(name:string) {
+    const url = environment.inventoryService + "user/name/" + name;
+    return this.get<UserDB[]>(url);
   }
 }

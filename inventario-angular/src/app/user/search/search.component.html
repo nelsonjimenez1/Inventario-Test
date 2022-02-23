@@ -1,0 +1,17 @@
+<form (ngSubmit)="search()">
+  <div class="form-gorup text-center">
+    <h1>Parametros de busqueda</h1>
+  </div>
+  <div class="form-group mx-sm-4 pt-2">
+    <label for="role">Nombre: </label>
+    <input class="form-control" type="text" [(ngModel)]="name" name="name" placeholder="nombre" required>
+  </div>  
+  <div class="form-group mx-sm-4 pt-3">
+    <input type="submit" class="btn btn-block ingresar  mx-sm-4" value="Consultar">
+  </div>
+</form>
+<div>
+  <button (click) = 'clean()'>Limpiar</button>
+  <button (click) = 'add()'>Agregar un usuario</button>
+</div>
+

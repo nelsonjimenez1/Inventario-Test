@@ -15,6 +15,6 @@ public interface UserRepository extends JpaRepository<UserDB, Long> {
   @Query("SELECT u from UserDB u WHERE u.name = :name")
   UserDB findByName(@Param("name") String name);
 
-  @Query("SELECT u from UserDB u WHERE u.name LIKE '%' + :name + '%'")
+  @Query("SELECT u from UserDB u WHERE u.name LIKE :name")
   List<UserDB> findAllByName(@Param("name") String name);
 }

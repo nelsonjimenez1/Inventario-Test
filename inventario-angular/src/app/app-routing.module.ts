@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './auth/login/login.component';
-import { SignupComponent } from './auth/signup/signup.component';
+import { ListComponent } from './user/list/list.component';
+import { SearchComponent } from './user/search/search.component';
+import { ViewComponent } from './user/view/view.component';
 
 const routes: Routes = [
   {
-    path: 'login', component: LoginComponent
+    path: '', component: SearchComponent
   },
   {
-    path: 'signup', component: SignupComponent
+    path: 'list', component: ListComponent
   },
   {
-    path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+    path: 'view/:id', component: ViewComponent
   }
 ];
 

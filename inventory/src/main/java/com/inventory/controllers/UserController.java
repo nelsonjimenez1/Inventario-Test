@@ -37,7 +37,7 @@ public class UserController implements UserControllerInterface {
 
 	public ResponseEntity<String> deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);
-		return new ResponseEntity<String>("The user with id: " + id.toString() + " was removed", HttpStatus.OK);
+		return new ResponseEntity<String>("The user with id: " + String.valueOf(id.intValue()) + " was removed", HttpStatus.OK);
 	}
 
 	public ResponseEntity<List<UserDB>> findByName(@PathVariable String name) {

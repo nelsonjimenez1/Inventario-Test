@@ -1,5 +1,6 @@
 package com.inventory.services.Impl;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,7 +68,7 @@ public class UserService implements UserServiceInterface {
   }
 
   public List<UserDB> findByName(String name) {
-    List<UserDB> findByName = userRepository.findAllByName(name);
+    List<UserDB> findByName = userRepository.findAllByName(MessageFormat.format("{0}" + name + "{0}", "%"));
     if (findByName.size() == 0 || findByName == null) {
       throw new UserException("Empty list user");
     } else {
