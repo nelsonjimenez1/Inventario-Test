@@ -1,16 +1,8 @@
-package com.inventory.entities;
+package com.inventory.dtos;
 
 import java.sql.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-@Entity
-public class UserDB {
-
-	@Id
-	@GeneratedValue
+public class UserDTO {
 	private long id;
 	private String name;
 	private String lastName;
@@ -21,11 +13,11 @@ public class UserDB {
 	private String position;
 	private Double salary;
 
-	public UserDB() {
+	public UserDTO() {
 
 	}
 
-	public UserDB(long id, String name, String lastName, String typeDocument, String documentNumber, Date birthDate,
+	public UserDTO(long id, String name, String lastName, String typeDocument, String documentNumber, Date birthDate,
 			Date bondingDate, String position, Double salary) {
 		this.id = id;
 		this.name = name;

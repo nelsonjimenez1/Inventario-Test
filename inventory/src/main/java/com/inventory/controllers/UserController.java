@@ -1,15 +1,19 @@
 package com.inventory.controllers;
 
-import java.util.List;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.Period;
 
 import com.inventory.apis.UserControllerInterface;
+import com.inventory.dtos.UserDTO;
+import com.inventory.dtos.UserDTOResponse;
 import com.inventory.entities.UserDB;
 import com.inventory.services.UserServiceInterface;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,29 +22,39 @@ public class UserController implements UserControllerInterface {
 
 	@Autowired
 	private UserServiceInterface userService;
+	@Autowired
+	private ModelMapper modelMapper;
 
-	public ResponseEntity<List<UserDB>> getListUser() {
-		return new ResponseEntity<List<UserDB>>(userService.getListUser(), HttpStatus.OK);
+	public ResponseEntity<UserDTOResponse> addUser(@RequestBody UserDTO userDto) {
+		UserDB userDB = null;
+		UserDTO userDTOResponse = null;
+		try {
+			userDB = convertToEntity(userDto);
+			userDTOResponse  = convertToDto(userService.addUser(userDB));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		String bondingDate = calculateTime(userDTOResponse.getBondingDate().toLocalDate());
+		String age = calculateTime(userDTOResponse.getBirthDate().toLocalDate());
+		UserDTOResponse response = new UserDTOResponse(bondingDate, age);
+		return new ResponseEntity<UserDTOResponse>(response, HttpStatus.CREATED);
 	}
 
-	public ResponseEntity<UserDB> getUserById(@PathVariable Long id) {
-		return new ResponseEntity<UserDB>(userService.getUserById(id), HttpStatus.OK);
+	private UserDB convertToEntity(UserDTO userDto) throws ParseException {
+    return modelMapper.map(userDto, UserDB.class);
 	}
 
-	public ResponseEntity<UserDB> editUser(@RequestBody UserDB user) {
-		return new ResponseEntity<UserDB>(userService.editUser(user), HttpStatus.OK);
+	private UserDTO convertToDto(UserDB userDB) throws ParseException {
+    return modelMapper.map(userDB, UserDTO.class);
 	}
 
-	public ResponseEntity<UserDB> addUser(@RequestBody UserDB user) {
-		return new ResponseEntity<UserDB>(userService.addUser(user), HttpStatus.CREATED);
-	}
-
-	public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-		userService.deleteUser(id);
-		return new ResponseEntity<String>("The user with id: " + String.valueOf(id.intValue()) + " was removed", HttpStatus.OK);
-	}
-
-	public ResponseEntity<List<UserDB>> findByName(@PathVariable String name) {
-		return new ResponseEntity<List<UserDB>>(userService.findByName(name), HttpStatus.OK);
-	}
+	public String calculateTime(LocalDate dob) {  
+    LocalDate curDate = LocalDate.now();  
+    if ((dob != null) && (curDate != null)) {    
+			Period between = Period.between(dob, curDate);  
+			return String.valueOf(between.getYears()) + " años " + String.valueOf(between.getMonths()) + " meses " + String.valueOf(between.getDays()) + " dias";  
+    } else {  
+      return "";  
+    }
+  } 
 }

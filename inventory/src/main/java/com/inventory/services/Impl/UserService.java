@@ -1,8 +1,10 @@
 package com.inventory.services.Impl;
 
-import java.text.MessageFormat;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 
 import com.inventory.entities.UserDB;
 import com.inventory.exceptions.UserException;
@@ -17,62 +19,47 @@ public class UserService implements UserServiceInterface {
   @Autowired
   private UserRepository userRepository;
 
-  public List<UserDB> getListUser() {
-    List<UserDB> findAll = userRepository.findAll();
-    if (findAll.size() == 0 || findAll == null) {
-      throw new UserException("Empty list user");
-    } else {
-      return findAll;
-    }
-  }
-
-  public UserDB getUserById(Long id) {
-    Optional<UserDB> userOpt = userRepository.findById(id);
-    if (userOpt.isPresent()) {
-      return userOpt.get();
-    } else {
-      throw new UserException("User not found");
-    }
-  }
-
-  public UserDB editUser(UserDB user) {
-    Optional<UserDB> userOpt = userRepository.findById(user.getId());
-    if (userOpt.isPresent()) {
-      try {
-        return userRepository.save(user);
-      } catch (Exception e) {
-        throw new UserException("User repeated name");
-      }
-    } else {
-      throw new UserException("User not found");
-    }
-  }
-
   public UserDB addUser(UserDB user) {
-    UserDB userFind = userRepository.findByName(user.getName());
-    if (userFind != null) {
-      throw new UserException("User repeated name");
-    } else {
+    if (validateUser(user)) {
       return userRepository.save(user);
+    } else {
+      throw new UserException("User not valid");
     }
   }
 
-  public Long deleteUser(Long id) {
-    Optional<UserDB> userFind = userRepository.findById(id);
-    if (userFind.isPresent()) {
-      userRepository.deleteById(id);
-      return id;
-    } else {
-      throw new UserException("User not found");
-    }
+  public boolean validateUser(UserDB user) {
+    if (user.getName().equals("") || user.getLastName().equals("") || user.getTypeDocument().equals("") || user.getDocumentNumber().equals("") || user.getPosition().equals("") || user.getSalary() <= 0) {
+      return false;
+    } else if (user.getBirthDate().toString().equals("") || user.getBondingDate().toString().equals("")) {
+      return false;
+    } else if (!validateDateFormat(user.getBirthDate()) || !validateDateFormat(user.getBondingDate())) {
+      return false;      
+    } else if (calculateAge(user.getBirthDate().toLocalDate()) < 18) {
+      return false;
+    } 
+    return true;
   }
 
-  public List<UserDB> findByName(String name) {
-    List<UserDB> findByName = userRepository.findAllByName(MessageFormat.format("{0}" + name + "{0}", "%"));
-    if (findByName.size() == 0 || findByName == null) {
-      throw new UserException("Empty list user");
-    } else {
-      return findByName;
+  public boolean validateDateFormat(Date date) {
+    Boolean valid = true;
+    try {
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      dateFormat.setLenient(false);
+      dateFormat.parse(date.toLocalDate().getYear() + "-" + date.toLocalDate().getMonthValue() + "-" + date.toLocalDate().getDayOfMonth());
+      valid = true;
+    } catch (ParseException e) {
+      valid = false;
     }
+
+    return valid;
   }
+
+  public int calculateAge(LocalDate dob) {  
+    LocalDate curDate = LocalDate.now();  
+    if ((dob != null) && (curDate != null)) {    
+      return Period.between(dob, curDate).getYears();  
+    } else {  
+      return 0;  
+    }
+  }  
 }
