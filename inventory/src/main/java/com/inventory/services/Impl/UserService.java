@@ -28,7 +28,9 @@ public class UserService implements UserServiceInterface {
   }
 
   public boolean validateUser(UserDb user) {
-    if (user.getName().equals("") || user.getLastName().equals("") || user.getTypeDocument().equals("") || user.getDocumentNumber().equals("") || user.getPosition().equals("") || user.getSalary() <= 0) {
+    if (user.getName() == null || user.getLastName() == null || user.getTypeDocument() == null || user.getDocumentNumber() == null || user.getPosition() == null || user.getSalary() == null || user.getBirthDate() == null || user.getBondingDate() == null) {
+      return false;
+    } else if (user.getName().equals("") || user.getLastName().equals("") || user.getTypeDocument().equals("") || user.getDocumentNumber().equals("") || user.getPosition().equals("") || user.getSalary() <= 0) {
       return false;
     } else if (user.getBirthDate().toString().equals("") || user.getBondingDate().toString().equals("")) {
       return false;
