@@ -1,10 +1,10 @@
 package com.inventory.dtos;
 
-public class UserDTOResponse {
+public class UserDtoResponse {
 	private String bondingDate;
 	private String age;
 
-	public UserDTOResponse(String bondingDate, String age) {
+	public UserDtoResponse(String bondingDate, String age) {
 		this.bondingDate = bondingDate;
 		this.age = age;
 	}

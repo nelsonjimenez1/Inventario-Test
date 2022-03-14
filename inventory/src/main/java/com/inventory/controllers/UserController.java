@@ -5,9 +5,9 @@ import java.time.LocalDate;
 import java.time.Period;
 
 import com.inventory.apis.UserControllerInterface;
-import com.inventory.dtos.UserDTO;
-import com.inventory.dtos.UserDTOResponse;
-import com.inventory.entities.UserDB;
+import com.inventory.dtos.UserDto;
+import com.inventory.dtos.UserDtoResponse;
+import com.inventory.entities.UserDb;
 import com.inventory.services.UserServiceInterface;
 
 import org.modelmapper.ModelMapper;
@@ -25,27 +25,26 @@ public class UserController implements UserControllerInterface {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	public ResponseEntity<UserDTOResponse> addUser(@RequestBody UserDTO userDto) {
-		UserDB userDB = null;
-		UserDTO userDTOResponse = null;
+	public ResponseEntity<UserDtoResponse> addUser(@RequestBody UserDto userDto) {
+		UserDb userDb = null;
 		try {
-			userDB = convertToEntity(userDto);
-			userDTOResponse  = convertToDto(userService.addUser(userDB));
+			userDb = convertToEntity(userDto);
+			userDto  = convertToDto(userService.addUser(userDb));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		String bondingDate = calculateTime(userDTOResponse.getBondingDate().toLocalDate());
-		String age = calculateTime(userDTOResponse.getBirthDate().toLocalDate());
-		UserDTOResponse response = new UserDTOResponse(bondingDate, age);
-		return new ResponseEntity<UserDTOResponse>(response, HttpStatus.CREATED);
+		String bondingDate = calculateTime(userDto.getBondingDate().toLocalDate());
+		String age = calculateTime(userDto.getBirthDate().toLocalDate());
+		UserDtoResponse response = new UserDtoResponse(bondingDate, age);
+		return new ResponseEntity<UserDtoResponse>(response, HttpStatus.CREATED);
 	}
 
-	private UserDB convertToEntity(UserDTO userDto) throws ParseException {
-    return modelMapper.map(userDto, UserDB.class);
+	private UserDb convertToEntity(UserDto userDto) throws ParseException {
+    return modelMapper.map(userDto, UserDb.class);
 	}
 
-	private UserDTO convertToDto(UserDB userDB) throws ParseException {
-    return modelMapper.map(userDB, UserDTO.class);
+	private UserDto convertToDto(UserDb userDB) throws ParseException {
+    return modelMapper.map(userDB, UserDto.class);
 	}
 
 	public String calculateTime(LocalDate dob) {  

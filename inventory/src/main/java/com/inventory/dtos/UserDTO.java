@@ -2,7 +2,7 @@ package com.inventory.dtos;
 
 import java.sql.Date;
 
-public class UserDTO {
+public class UserDto {
 	private long id;
 	private String name;
 	private String lastName;
@@ -13,11 +13,11 @@ public class UserDTO {
 	private String position;
 	private Double salary;
 
-	public UserDTO() {
+	public UserDto() {
 
 	}
 
-	public UserDTO(long id, String name, String lastName, String typeDocument, String documentNumber, Date birthDate,
+	public UserDto(long id, String name, String lastName, String typeDocument, String documentNumber, Date birthDate,
 			Date bondingDate, String position, Double salary) {
 		this.id = id;
 		this.name = name;

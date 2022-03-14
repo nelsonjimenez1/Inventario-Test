@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 
-import com.inventory.entities.UserDB;
+import com.inventory.entities.UserDb;
 import com.inventory.exceptions.UserException;
 import com.inventory.repositories.UserRepository;
 import com.inventory.services.UserServiceInterface;
@@ -19,7 +19,7 @@ public class UserService implements UserServiceInterface {
   @Autowired
   private UserRepository userRepository;
 
-  public UserDB addUser(UserDB user) {
+  public UserDb addUser(UserDb user) {
     if (validateUser(user)) {
       return userRepository.save(user);
     } else {
@@ -27,7 +27,7 @@ public class UserService implements UserServiceInterface {
     }
   }
 
-  public boolean validateUser(UserDB user) {
+  public boolean validateUser(UserDb user) {
     if (user.getName().equals("") || user.getLastName().equals("") || user.getTypeDocument().equals("") || user.getDocumentNumber().equals("") || user.getPosition().equals("") || user.getSalary() <= 0) {
       return false;
     } else if (user.getBirthDate().toString().equals("") || user.getBondingDate().toString().equals("")) {

@@ -1,7 +1,7 @@
 package com.inventory.services;
 
-import com.inventory.entities.UserDB;
+import com.inventory.entities.UserDb;
 
 public interface UserServiceInterface {
-	public UserDB addUser(UserDB user);
+	public UserDb addUser(UserDb user);
 }

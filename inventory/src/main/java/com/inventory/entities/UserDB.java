@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class UserDB {
+public class UserDb {
 
 	@Id
 	@GeneratedValue
@@ -21,11 +21,11 @@ public class UserDB {
 	private String position;
 	private Double salary;
 
-	public UserDB() {
+	public UserDb() {
 
 	}
 
-	public UserDB(long id, String name, String lastName, String typeDocument, String documentNumber, Date birthDate,
+	public UserDb(long id, String name, String lastName, String typeDocument, String documentNumber, Date birthDate,
 			Date bondingDate, String position, Double salary) {
 		this.id = id;
 		this.name = name;
