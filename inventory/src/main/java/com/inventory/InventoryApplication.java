@@ -7,6 +7,8 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -23,6 +25,11 @@ public class InventoryApplication extends SpringBootServletInitializer {
 
 	@Autowired
 	Environment env;
+
+	@Bean
+	public ModelMapper modelMapper() {
+    return new ModelMapper();
+	}
 
 	@Bean
 	public CorsFilter corsFilter() {

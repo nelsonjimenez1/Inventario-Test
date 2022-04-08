@@ -35,11 +35,11 @@ public class UserService implements UserServiceInterface {
     }
   }
 
-  public UserDB editUser(UserDB user) {
-    Optional<UserDB> userOpt = userRepository.findById(user.getId());
+  public UserDB editUser(UserDB userDB) {
+    Optional<UserDB> userOpt = userRepository.findById(userDB.getId());
     if (userOpt.isPresent()) {
       try {
-        return userRepository.save(user);
+        return userRepository.save(userDB);
       } catch (Exception e) {
         throw new UserException("User repeated name");
       }
@@ -48,12 +48,12 @@ public class UserService implements UserServiceInterface {
     }
   }
 
-  public UserDB addUser(UserDB user) {
-    UserDB userFind = userRepository.findByName(user.getName());
+  public UserDB addUser(UserDB userDB) {
+    UserDB userFind = userRepository.findByName(userDB.getName());
     if (userFind != null) {
       throw new UserException("User repeated name");
     } else {
-      return userRepository.save(user);
+      return userRepository.save(userDB);
     }
   }
 

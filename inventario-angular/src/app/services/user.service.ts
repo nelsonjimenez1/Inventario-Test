@@ -60,32 +60,32 @@ export class UserService {
   }
 
   getListUser() {
-    const url = environment.inventoryService + "user";
+    const url = environment.inventoryService + "users";
     return this.get<UserDB[]>(url);
   }
 
   getUserById(id:number) {
-    const url = environment.inventoryService + "user/" + id;
+    const url = environment.inventoryService + "users/" + id;
     return this.get<UserDB>(url);
   }
 
   editUser(user:UserDB) {
-    const url = environment.inventoryService + "user";
+    const url = environment.inventoryService + "users";
     return this.put<UserDB>(url, user);
   }
 
   addUser(user:UserDB) {
-    const url = environment.inventoryService + "user";
+    const url = environment.inventoryService + "users";
     return this.post<UserDB>(url, user);
   }
 
   deleteUser(id:number) {
-    const url = environment.inventoryService + "user/" + id;
+    const url = environment.inventoryService + "users/" + id;
     return this.delete<UserDB>(url);
   }
 
   findByName(name:string) {
-    const url = environment.inventoryService + "user/name/" + name;
+    const url = environment.inventoryService + "users/name/" + name;
     return this.get<UserDB[]>(url);
   }
 }

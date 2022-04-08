@@ -10,9 +10,9 @@ public interface UserServiceInterface {
 
 	public UserDB getUserById(Long id);
 
-	public UserDB editUser(UserDB user);
+	public UserDB editUser(UserDB userDB);
 
-	public UserDB addUser(UserDB user);
+	public UserDB addUser(UserDB userDB);
 
 	public Long deleteUser(Long id);
 
