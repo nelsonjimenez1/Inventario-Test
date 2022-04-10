@@ -67,7 +67,7 @@ public class UserControllerTest {
     List<UserDB> listUserTest = new ArrayList<>();
     listUserTest.add(new UserDB(1l, "name", Role.ADMINISTRADOR, false));
     when(userService.getListUser()).thenReturn(listUserTest);
-    this.mockMvc.perform(get("/user")
+    this.mockMvc.perform(get("/users")
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)))
         .andExpect(jsonPath("$[*].name", hasItem("name")));
@@ -76,7 +76,7 @@ public class UserControllerTest {
   @Test
   public void testGetListUserEmptyList() throws Exception {
     when(userService.getListUser()).thenThrow(new UserException("Empty list user"));
-    this.mockMvc.perform(get("/user")
+    this.mockMvc.perform(get("/users")
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$", is("Empty list user")));
@@ -87,7 +87,7 @@ public class UserControllerTest {
     Long id = 1l;
     UserDB user = new UserDB(1l, "name", Role.ADMINISTRADOR, true);
     when(userService.getUserById(anyLong())).thenReturn(user);
-    this.mockMvc.perform(get("/user/{id}", id)
+    this.mockMvc.perform(get("/users/{id}", id)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name", is("name")));
@@ -97,7 +97,7 @@ public class UserControllerTest {
   public void testGetUserByIdUserNotFound() throws Exception {
     Long id = 2l;
     when(userService.getUserById(anyLong())).thenThrow(new UserException("User not found"));
-    this.mockMvc.perform(get("/user/{id}", id)
+    this.mockMvc.perform(get("/users/{id}", id)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$", is("User not found")));
@@ -107,7 +107,7 @@ public class UserControllerTest {
   public void testEditUser() throws Exception {
     UserDB user = new UserDB(1l, "name", Role.ADMINISTRADOR, true);
     when(userService.editUser(any())).thenReturn(user);
-    this.mockMvc.perform(put("/user")
+    this.mockMvc.perform(put("/users")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(user)))
@@ -119,7 +119,7 @@ public class UserControllerTest {
   public void testEditUserRepeatedName() throws Exception {
     UserDB user = new UserDB(1l, "name", Role.ADMINISTRADOR, true);
     when(userService.editUser(any())).thenThrow(new UserException("User repeated name"));
-    this.mockMvc.perform(put("/user")
+    this.mockMvc.perform(put("/users")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(user)))
@@ -131,7 +131,7 @@ public class UserControllerTest {
   public void testAddUser() throws Exception {
     UserDB user = new UserDB(1l, "name", Role.ADMINISTRADOR, true);
     when(userService.addUser(any())).thenReturn(user);
-    this.mockMvc.perform(post("/user")
+    this.mockMvc.perform(post("/users")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(user)))
@@ -143,7 +143,7 @@ public class UserControllerTest {
   public void testAddUserRepeatedName() throws Exception {
     UserDB user = new UserDB(1l, "name", Role.ADMINISTRADOR, true);
     when(userService.addUser(any())).thenThrow(new UserException("User repeated name"));
-    this.mockMvc.perform(post("/user")
+    this.mockMvc.perform(post("/users")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(user)))
@@ -155,7 +155,7 @@ public class UserControllerTest {
   public void testDeleteUser() throws Exception {
     Long id = 1l;
     when(userService.deleteUser(anyLong())).thenReturn(id);
-    this.mockMvc.perform(delete("/user/{id}", id)
+    this.mockMvc.perform(delete("/users/{id}", id)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$",
@@ -166,7 +166,7 @@ public class UserControllerTest {
   public void testDeleteUserUserNotFound() throws Exception {
     Long id = 2l;
     when(userService.deleteUser(anyLong())).thenThrow(new UserException("User not found"));
-    this.mockMvc.perform(delete("/user/{id}", id)
+    this.mockMvc.perform(delete("/users/{id}", id)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$", is("User not found")));
@@ -177,7 +177,7 @@ public class UserControllerTest {
     List<UserDB> listUserTest = new ArrayList<>();
     listUserTest.add(new UserDB(1l, "name", Role.ADMINISTRADOR, false));
     when(userService.findByName(anyString())).thenReturn(listUserTest);
-    this.mockMvc.perform(get("/user/name/{name}", "name")
+    this.mockMvc.perform(get("/users/name/{name}", "name")
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)))
         .andExpect(jsonPath("$[*].name", hasItem("name")));
@@ -186,7 +186,7 @@ public class UserControllerTest {
   @Test
   public void testFindByNameEmptyList() throws Exception {
     when(userService.findByName(anyString())).thenThrow(new UserException("Empty list user"));
-    this.mockMvc.perform(get("/user/name/{name}", "name")
+    this.mockMvc.perform(get("/users/name/{name}", "name")
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$", is("Empty list user")));
