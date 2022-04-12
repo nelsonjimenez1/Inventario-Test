@@ -9,9 +9,9 @@ pipeline
             steps 
             {
                 echo 'Build App'
-                dir("/inventory")
+                dir("/inventor")
                 {
-                    bat "mvn clean install"
+                    echo 'Build App 2'
                 } 
             }
         }
