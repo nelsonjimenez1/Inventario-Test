@@ -9,7 +9,7 @@ pipeline
             steps 
             {
                 echo 'Build App'
-                bat 'cd inventory'
+                bat 'cd inventor'
                 bat 'mvn clean install'
             }
         }
