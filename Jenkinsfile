@@ -9,8 +9,7 @@ pipeline
             steps 
             {
                 echo 'Build App'
-                bat 'cd inventory'
-                withMaven 
+                dir("/inventory")
                 {
                     bat "mvn clean install"
                 } 
