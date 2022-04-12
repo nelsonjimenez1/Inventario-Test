@@ -9,26 +9,10 @@ pipeline
             steps 
             {
                 echo 'Build App'
-                dir("/inventor")
+                dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipeline/inventory')
                 {
-                    echo 'Build App 2'
+                    bat 'mvn clean install'
                 } 
-            }
-        }
-
-        stage('Test') 
-        {
-            steps 
-            {
-                echo 'Test App'
-            }
-        }
-
-        stage('Deploy') 
-        {
-            steps 
-            {
-                echo 'Deploy App'
             }
         }
     }
