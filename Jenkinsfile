@@ -14,6 +14,11 @@ pipeline
                     bat 'mvn clean install'
                 } 
             }
+            steps 
+            {
+                echo 'Scan src'
+                bat 'sonar-scanner' 
+            }
         }
     }
 
