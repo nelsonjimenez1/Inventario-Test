@@ -12,13 +12,16 @@ pipeline
                 dir('C:/ProgramData/Jenkins/.jenkins/workspace/pipeline/inventory')
                 {
                     bat 'mvn clean install'
-                } 
+                }
             }
+        }
+        stage('Scanner') 
+        {    
             steps 
             {
                 echo 'Scan src'
                 bat 'sonar-scanner' 
-            }
+            }            
         }
     }
 
