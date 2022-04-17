@@ -16,6 +16,6 @@
 1. Angular se utiliza en el front-end 
 2. Spring Framework y Spring Boot se utiliza en el back-end 
 3. Postgresql se utiliza en la base de datos 
-4. Gradle se utiliza como gestor de dependencias 
+4. Maven se utiliza como gestor de dependencias 
 5. Jenkins se utiliza para integracion continua
 6. Sonarqube se utiliza como analizador de codigo estatico
