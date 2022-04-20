@@ -1,49 +1,37 @@
 package com.inventory.controllers;
 
-import static org.mockito.Mockito.when;
-
-import java.sql.Date;
-import java.util.ArrayList;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inventory.apis.ProductControllerInterface;
-import com.inventory.entities.Product;
-import com.inventory.entities.Role;
-import com.inventory.entities.UserDB;
-import com.inventory.exceptions.GlobalExceptionHandler;
-import com.inventory.exceptions.ProductException;
-import com.inventory.exceptions.UserException;
-import com.inventory.services.ProductServiceInterface;
-import com.inventory.services.UserServiceInterface;
-
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.anyString;
-import org.junit.jupiter.api.BeforeEach;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inventory.entities.Role;
+import com.inventory.entities.UserDB;
+import com.inventory.exceptions.GlobalExceptionHandler;
+import com.inventory.exceptions.UserException;
+import com.inventory.services.UserServiceInterface;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.hamcrest.Matchers.*;
 
 @WebMvcTest({ UserController.class, GlobalExceptionHandler.class })
 public class UserControllerTest {
@@ -56,11 +44,12 @@ public class UserControllerTest {
   private MockMvc mockMvc;
   @Autowired
   private GlobalExceptionHandler globalExceptionHandler;
-  final private long millis = System.currentTimeMillis();
 
   @BeforeEach
   public void init() {
-    this.mockMvc = MockMvcBuilders.standaloneSetup(userController).setControllerAdvice(globalExceptionHandler).build();
+    this.mockMvc = MockMvcBuilders.standaloneSetup(userController)
+        .setControllerAdvice(globalExceptionHandler)
+        .build();
   }
 
   public static String asJsonString(final Object obj) {
@@ -74,10 +63,51 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testLogin() throws Exception {
-    UserDB user = new UserDB(1l, "user", "pass", "name", 12, Role.ADMINISTRADOR_SOPORTE, new Date(millis));
-    when(userService.login(any())).thenReturn(user);
-    this.mockMvc.perform(post("/user/login")
+  public void testGetListUser() throws Exception {
+    List<UserDB> listUserTest = new ArrayList<>();
+    listUserTest.add(new UserDB(1l, "name", Role.ADMINISTRADOR, false));
+    when(userService.getListUser()).thenReturn(listUserTest);
+    this.mockMvc.perform(get("/users")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)))
+        .andExpect(jsonPath("$[*].name", hasItem("name")));
+  }
+
+  @Test
+  public void testGetListUserEmptyList() throws Exception {
+    when(userService.getListUser()).thenThrow(new UserException("Empty list user"));
+    this.mockMvc.perform(get("/users")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$", is("Empty list user")));
+  }
+
+  @Test
+  public void testGetUserById() throws Exception {
+    Long id = 1l;
+    UserDB user = new UserDB(1l, "name", Role.ADMINISTRADOR, true);
+    when(userService.getUserById(anyLong())).thenReturn(user);
+    this.mockMvc.perform(get("/users/{id}", id)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.name", is("name")));
+  }
+
+  @Test
+  public void testGetUserByIdUserNotFound() throws Exception {
+    Long id = 2l;
+    when(userService.getUserById(anyLong())).thenThrow(new UserException("User not found"));
+    this.mockMvc.perform(get("/users/{id}", id)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$", is("User not found")));
+  }
+
+  @Test
+  public void testEditUser() throws Exception {
+    UserDB user = new UserDB(1l, "name", Role.ADMINISTRADOR, true);
+    when(userService.editUser(any())).thenReturn(user);
+    this.mockMvc.perform(put("/users")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(user)))
@@ -86,10 +116,22 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testSignUp() throws Exception {
-    UserDB user = new UserDB(1l, "user", "pass", "name", 12, Role.ADMINISTRADOR_SOPORTE, new Date(millis));
-    when(userService.signUp(any())).thenReturn(user);
-    this.mockMvc.perform(post("/user")
+  public void testEditUserRepeatedName() throws Exception {
+    UserDB user = new UserDB(1l, "name", Role.ADMINISTRADOR, true);
+    when(userService.editUser(any())).thenThrow(new UserException("User repeated name"));
+    this.mockMvc.perform(put("/users")
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(asJsonString(user)))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$", is("User repeated name")));
+  }
+
+  @Test
+  public void testAddUser() throws Exception {
+    UserDB user = new UserDB(1l, "name", Role.ADMINISTRADOR, true);
+    when(userService.addUser(any())).thenReturn(user);
+    this.mockMvc.perform(post("/users")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(user)))
@@ -98,34 +140,55 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testSignUpRepeatedUser() throws Exception {
-    UserDB user = new UserDB(1l, "user", "pass", "name", 12, Role.ADMINISTRADOR_SOPORTE, new Date(millis));
-    when(userService.signUp(any())).thenThrow(new UserException("Repeated user"));
-    this.mockMvc.perform(post("/user")
+  public void testAddUserRepeatedName() throws Exception {
+    UserDB user = new UserDB(1l, "name", Role.ADMINISTRADOR, true);
+    when(userService.addUser(any())).thenThrow(new UserException("User repeated name"));
+    this.mockMvc.perform(post("/users")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(user)))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$", is("Repeated user")));
+        .andExpect(jsonPath("$", is("User repeated name")));
   }
 
   @Test
-  public void testGetUserByUser() throws Exception {
-    String user = "user";
-    UserDB userDB = new UserDB(1l, "user", "pass", "name", 12, Role.ADMINISTRADOR_SOPORTE, new Date(millis));  
-    when(userService.getUserByUser(anyString())).thenReturn(userDB);
-    this.mockMvc.perform(get("/user/{user}", user)
+  public void testDeleteUser() throws Exception {
+    Long id = 1l;
+    when(userService.deleteUser(anyLong())).thenReturn(id);
+    this.mockMvc.perform(delete("/users/{id}", id)
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.user", is("user")));
+        .andExpect(jsonPath("$",
+            is("The user with id: " + id.toString() + " was removed")));
   }
 
   @Test
-  public void testGetUserByUserProductNotFound() throws Exception {
-    String user = "user";
-    when(userService.getUserByUser(anyString())).thenThrow(new UserException("Product not found"));
-    this.mockMvc.perform(get("/user/{user}", user)
+  public void testDeleteUserUserNotFound() throws Exception {
+    Long id = 2l;
+    when(userService.deleteUser(anyLong())).thenThrow(new UserException("User not found"));
+    this.mockMvc.perform(delete("/users/{id}", id)
         .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$", is("User not found")));
+  }
+
+  @Test
+  public void tesFindByName() throws Exception {
+    List<UserDB> listUserTest = new ArrayList<>();
+    listUserTest.add(new UserDB(1l, "name", Role.ADMINISTRADOR, false));
+    when(userService.findByName(anyString())).thenReturn(listUserTest);
+    this.mockMvc.perform(get("/users/name/{name}", "name")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)))
+        .andExpect(jsonPath("$[*].name", hasItem("name")));
+  }
+
+  @Test
+  public void testFindByNameEmptyList() throws Exception {
+    when(userService.findByName(anyString())).thenThrow(new UserException("Empty list user"));
+    this.mockMvc.perform(get("/users/name/{name}", "name")
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$", is("Empty list user")));
   }
 }

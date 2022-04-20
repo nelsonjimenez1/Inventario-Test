@@ -1,26 +1,19 @@
-package com.inventory.entities;
+package com.inventory.dtos;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.inventory.entities.Role;
 
-@Entity
-public class UserDB {
+public class UserDTO {
 
-	@Id
-	@GeneratedValue
 	private long id;
-	@Column(unique = true)
 	private String name;
 	private Role role;
 	private Boolean active;
 
-	public UserDB() {
-
+	public UserDTO() {
+    
 	}
 
-	public UserDB(long id, String name, Role role, Boolean active) {
+	public UserDTO(long id, String name, Role role, Boolean active) {
 		try {
 			validateName(name);
 			validateRole(role);

@@ -1,20 +1,20 @@
 package com.inventory.services;
 
-import javax.jws.soap.SOAPBinding.Use;
+import java.util.List;
 
 import com.inventory.entities.UserDB;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-
 public interface UserServiceInterface {
 
-  public UserDB login(UserDB user);
+	public List<UserDB> getListUser();
 
-  public UserDB signUp(UserDB user);
+	public UserDB getUserById(Long id);
 
-  public UserDB getUserByUser(String user);
+	public UserDB editUser(UserDB userDB);
 
-  public UserDB getUserByUserWithouthException(String user);
+	public UserDB addUser(UserDB userDB);
 
+	public Long deleteUser(Long id);
+
+	public List<UserDB> findByName(String name);
 }

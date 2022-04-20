@@ -7,13 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-   @ExceptionHandler(value = ProductException.class)
-   public ResponseEntity exception(ProductException exception) {
-      return new ResponseEntity(exception.getMessage(), HttpStatus.BAD_REQUEST);
-   }
-
-   @ExceptionHandler(value = UserException.class)
-   public ResponseEntity exception(UserException exception) {
-      return new ResponseEntity(exception.getMessage(), HttpStatus.BAD_REQUEST);
-   }
+  @ExceptionHandler(value = UserException.class)
+  public ResponseEntity<String> exception(UserException exception) {
+    return new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+  }
 }

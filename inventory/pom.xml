@@ -14,7 +14,7 @@
 	<name>inventory</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
     <jwt.version>0.7.0</jwt.version>
 	</properties>
 	<dependencies>
@@ -56,6 +56,11 @@
 			<artifactId>junit</artifactId>
 			<version>4.13.2</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+    	<groupId>org.modelmapper</groupId>
+    	<artifactId>modelmapper</artifactId>
+    	<version>3.0.0</version>
 		</dependency>
 	</dependencies>
 

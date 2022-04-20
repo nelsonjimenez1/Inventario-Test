@@ -1,0 +1,28 @@
+<div>
+  <div class="form-gorup text-center">
+    <h1>Datos del usuario</h1>
+  </div>
+  <div class="form-group mx-sm-4 pt-2">
+    <label for="role">ID: </label>
+    <input class="form-control" type="text" [(ngModel)]="user.id" name="id" value="user.id" [disabled]="inputID">
+  </div>
+  <div class="form-group mx-sm-4 pt-2">
+    <label for="role">Nombre: </label>
+    <input class="form-control" type="text" [(ngModel)]="user.name" name="name" value="user.name" [disabled]="input">
+  </div>
+  <div class="form-group mx-sm-4 pt-3 text-center">
+    <label for="role">Rol: </label>
+    <select [(ngModel)]="user.role" name="role" [disabled]="input">
+      <option value="ADMINISTRADOR">administrador</option>
+      <option value="AUDITOR">auditor</option>
+      <option value="AUXILIAR">auxiliar</option>
+    </select>
+  </div>
+  <div class="form-group mx-sm-4 pt-2">
+    <label for="role">Activo: </label>
+    <input class="form-control" type="checkbox" [(ngModel)]="user.active" name="active" value="user.active" [disabled]="input">
+  </div>
+  <button (click) = 'save()' [disabled]="buttonSave">Guardar</button>
+  <button (click) = 'edit()' [disabled]="buttonEdit">Editar</button>
+  <button (click) = 'delete()' [disabled]="buttonDelete">Eliminar</button>
+</div>
